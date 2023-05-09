@@ -1,0 +1,50 @@
+TROPFE read me
+
+This funciton package utilizes MATPOWER to run multiple power flow solver operations 
+with randomized n-1 or n-2 contingencies. The output is intended for use as a large 
+database for training Machine Learning algorithms. 
+
+mod_case(casedata)
+	This funciton applies a semi-randomized change to the case that can be set
+	within the function. Probability of change can also be set. 
+
+	more informatio on setting contingencies can be found using 'help 
+	apply_changes' in the command window or in the MATPOWER manual.
+
+fixOrder(casedata)
+	fixOrder creates a separate array that gives bus indexes to branches in the 
+	case. This allows the later run functions to identify what bus each branch is
+	attatched to.
+
+stack(case,mpopt,num)
+	'case' is the chosen test case in which to run the solver. MATPOWER comes 
+	with many pre-made test cases that can be found in the 'data' folder. 
+	'mpopt', also known as mpoption, is used to set and retreive MATPOWER options
+	structs. This can describe the solver in use as well as the format of the 
+	solution output.
+	'num' is the nuber of runs the function will produce, as well as how many 
+	lines will be in the output .mat file. 
+
+	Stack calls on the other functions in the package in comination and outputs 
+	the solutions into a .mat file. Currently this .mat output will be saved as
+	'trainer.mat' although this can be changed within the code. 
+
+	The format of the solution output is as follows. The matrix will have the 
+	dimensions MxN. It will be M tall where M = 'num' that was assigned when 
+	callng stack. The width will depend on the case.
+
+	N = 2*number of generators + 2*num loads + 6*number of lines. 
+
+	The order of the output is Generator Real Power, Generator Voltage, Load Real
+	Power, Load Reactive Power, Line in Service (0 or 1), Line Real Power, Line
+	Reactive Power, Line Current, Line Voltage, and Line Percent Overload.
+
+	The giveBeehavior(casedata,mpopt) function compiles a list of column labels
+	called 'order' that can be called to print within the function for further
+	clarity. 
+
+giveBeehavior(casedata, mpopt)
+	This function is called within stack.m to complete a single run with a single
+	case. This compiles the result of that run into the trainer.mat output
+	described within the 'stack' section. 
+	
